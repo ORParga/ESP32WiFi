@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "Wifi_C_GPIO_SOCKET"
+		},
+		{
+			"name": "Wifi_D_AP",
+			"path": "..\\Wifi_D_AP\\Wifi_D_AP"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"random": "c"
+		}
+	}
+}
