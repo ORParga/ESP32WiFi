@@ -35,6 +35,7 @@ bool autoRecovery_Infinite_Loop=false;
 // La wifi del ESP32 está configurada como Access Point (como si fuera un router)
 // y permite la conexion de clientes
 bool AP_funcionando=false;
+bool ServerSocket_funcionando=false;
 //**************************************************************************
 void case_SYSTEM_EVENT_SCAN_DONE(system_event_t *event){
     printf("Number of access points found: %d\n",
@@ -716,6 +717,8 @@ int writeSocket (struct SharedStruct *sendingSharedData,int ClientSocket,unsigne
     return bytesSend;
 }
 
+//Lee el buffer de entrada del SOCKET cliente. 
+//Puesto que el socket está en modo non-blocking, buelve inmediatamente, aunque no haya informacion en el buffer
 int readSocket (struct SharedStruct *receivedSharedData,int ClientSocket,unsigned char* BufferReceived,int BufferSize)
 {
     bool ret=0;
@@ -812,9 +815,7 @@ void SOCKETTask(void *parms){
         }
         
 
-    wifi_init_softap();
     char miniBuffer[25]={0};
-    iniSocket(miniBuffer,27015); 
 
     //STA
     tcpip_adapter_get_ip_info(TCPIP_ADAPTER_IF_STA,&ip_info_sta);
@@ -829,12 +830,21 @@ void SOCKETTask(void *parms){
     //***************************************************************************************
     //********************************Unrecoverable Inizialization Part ********************
      do{
-        do{
-
         printf("%s AP_ Inicialization Loop Start\n",TAG_SOCKETTask);
+        wifi_init_softap();
+        AP_funcionando=true;
+        do{
+            printf("%s ServerSocket Loop Start\n",TAG_SOCKETTask);
 
-        printf("%s AP_ Inicialization Loop End\n",TAG_SOCKETTask);
+            iniSocket(miniBuffer,27015); 
+            do{
+
+            }while();
+            printf("%s ServerSocket Loop End\n",TAG_SOCKETTask);
         }while(AP_funcionando);
+        //Por algún motivo, la AP deja de ser válida,
+        // sería necesario hacer una limpieza de variables
+        printf("%s AP_ Inicialization Loop End\n",TAG_SOCKETTask);
      }while(autoRecovery_Infinite_Loop);
      do{
 
